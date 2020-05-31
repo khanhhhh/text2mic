@@ -7,7 +7,7 @@ import sounddevice as sd
 from system_hotkey import SystemHotkey
 from playsound import playsound
 import threading
-
+import functools
 
 def getClipboardData() -> str:
   p = subprocess.Popen(["xclip", "-selection", "clipboard", "-o"], stdout= subprocess.PIPE)
@@ -29,12 +29,12 @@ def playSoundData(filename: str= "hello.mp3"):
   #####
   t.join()
 
-def play(event):
+def play(lang= "en-AU", event = None):
   print("play", event)
   print("getting clipboard data")
   text = getClipboardData()
   print("calling text to speech api")
-  createAudioFile(text)
+  createAudioFile(text, lang)
   print("start playing")
   playSoundData()
   print("done")
@@ -44,7 +44,8 @@ def play(event):
 
 if __name__ == "__main__":
   hk = SystemHotkey()
-  hk.register(('alt', '1'), callback=play)
+  hk.register(('alt', "shift", 'e'), callback= functools.partial(play, "en-AU"))
+  hk.register(('alt', "shift", 'v'), callback= functools.partial(play, "vi"))
   sd.default.device = "pulse"
   print("ready")
 
