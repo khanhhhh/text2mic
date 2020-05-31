@@ -36,12 +36,12 @@ def playSoundData(filename: str= "hello.mp3"):
   #####
   t.join()
 
-def play(lang= "en-AU", event = None):
+def play(lang= "en", event = None):
   try:
     print("play", event)
     print("getting clipboard data")
     text = getClipboardData()
-    t = threading.Thread(target= playsound, args=("received.mp3",))
+    t = threading.Thread(target= playsound, args=(f"received_{lang}.mp3",))
     t.start()
     #setClipboardData(text)
     print("calling text to speech api:", text)
@@ -58,6 +58,7 @@ def play(lang= "en-AU", event = None):
 if __name__ == "__main__":
   hk = SystemHotkey()
   hk.register(('alt', "shift", 'e'), callback= functools.partial(play, "en"))
+  hk.register(('alt', "shift", 'a'), callback= functools.partial(play, "en-AU"))
   hk.register(('alt', "shift", 'v'), callback= functools.partial(play, "vi"))
   sd.default.device = "pulse"
   print("ready")
